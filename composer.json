@@ -5,9 +5,11 @@
   "keywords": [
     "fast",
     "router",
-    "small"
+    "small",
+    "psr-6"
   ],
   "version": "0.0.13-alpha",
+  "license": "BSD-3-Clause",
   "authors": [
     {
       "name": "Sultanov Albert",
