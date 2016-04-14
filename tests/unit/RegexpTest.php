@@ -28,7 +28,7 @@ class RegexpTest extends \Codeception\Test\Unit
 
     public function testToRegexp()
     {
-        $router = new router\Router();
+        $router = new router\Container();
         foreach ($this->expList as $pattern => $regexp) {
             $this->tester->assertEquals($router->toRegexp($pattern), $regexp);
         }
@@ -36,7 +36,7 @@ class RegexpTest extends \Codeception\Test\Unit
 
     public function testMatch()
     {
-        $router = new router\Router();
+        $router = new router\Container();
         foreach ($this->testParams as $pattern => $regexp) {
             $router[$pattern] = function () {
             };

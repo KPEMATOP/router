@@ -9,7 +9,7 @@
 namespace axisy\router;
 
 
-class Router implements \ArrayAccess
+class Container implements \ArrayAccess
 {
     const REGEX_FETCH_EXPR = "#(?<!\\\\)\\{[^:]+:(.+?)(?<!\\\\)\\}#";
     const REGEX_EXTRACT_PARAMS = '#(?<!\\\\)\{([^:]+):.+?(?<!\\\\)\}#';
