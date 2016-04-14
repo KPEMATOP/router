@@ -1,10 +1,10 @@
-# fast PHP router
+# Fast PHP router
+
+Small package allowing to organize quickly routing.
+If you are going to use for routing of HTTP requests, it will be necessary to expand the package and add the ability to process the HTTP request types. Directions arranged on a similar principle as described in https://nikic.github.io/2014/02/18/Fast-request-routing-using-regular-expressions.html, many thanks to the author of the blog =)
 ## Installing
 Via composer `composer require axisy/router`
-
-Package page in packagist.org https://packagist.org/packages/axisy/router
-
-## Usage
+## Base usage
 ```
 use \axisy\router as router;
 
@@ -18,5 +18,28 @@ $router = new router\Container([
         $params = $match->getParams();
     }
 ])
-$router['{route:.*}'] = function(route\Match $match){}
+//register new route handler
+$router['user/{id:\d}'] = function(route\Match $match){}
+
+//Initializing routing
+$router->route('route')
+```
+## Usage shortcuts
+_shortcuts_ - this contraction for regular expressions.
+```
+$router['{page:s}/{identity:d}'] = function(){}
+```
+Initially, the following shortcut available.
+
+1. __n__ => Number, equal to (?:[0-9]+\.[0-9]+|\d+) 
+2. __d__ - Decimal, equal to `\d+`  
+3. __s__ - String, equal to `\w+`   
+
+```
+//ad shortcuts
+$router->shortcuts['username'] = '[A-z][A-z0-9_]+';
+//usage defined shrtcut
+$router['/user/{name:username}'] = function(){};
+...
+$router->route('/user/foobarbaz')
 ```
