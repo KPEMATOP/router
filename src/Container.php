@@ -8,27 +8,62 @@
 
 namespace axisy\router;
 
-
+    /**
+     * Class Container
+     * @package axisy\router
+     */
+/**
+ * Class Container
+ * @package axisy\router
+ */
 class Container implements \ArrayAccess
 {
+    /**
+     * Regex for convert pattern to regular expression
+     */
     const REGEX_FETCH_EXPR = "#(?<!\\\\)\\{[^:]+:(.+?)(?<!\\\\)\\}#";
+    /**
+     * Regex for extract parameters name
+     */
     const REGEX_EXTRACT_PARAMS = '#(?<!\\\\)\{([^:]+):.+?(?<!\\\\)\}#';
+    /**
+     * @var string
+     */
     public $variableTagFormat = "\t%d\t";
+    /**
+     * @var string
+     */
     public $regexpSeparator = '~';
+    /**
+     * @var string
+     */
     public $identityChar = '#';
+    /**
+     * @var array
+     */
     public $shortcuts = [
-        'f' => '(?:[0-9]+\.[0-9]+|\d+)',
-        'i' => '\d+',
+        'n' => '[0-9]+\.[0-9]+|\d+',
+        'd' => '\d+',
         's' => '\w+'
     ];
+    /**
+     * @var array
+     */
     public $patterns = [];
-    private $preparedSearchRegex;
 
+    /**
+     * Container constructor.
+     * @param array $patterns
+     */
     public function __construct(array $patterns = [])
     {
         $this->extend($patterns);
     }
 
+    /**
+     * @param array $data
+     * @throws \ErrorException
+     */
     public function extend(array $data)
     {
         foreach ($data as $pattern => $handler) {
@@ -53,14 +88,18 @@ class Container implements \ArrayAccess
         if (!is_callable($value)) {
             throw new \ErrorException("Value must be a callable", 0, 1, __FILE__, __LINE__);
         }
-        $this->preparedSearchRegex = '';
         $this->patterns[$offset] = $value;
     }
 
+    /**
+     * @param $route
+     * @return mixed
+     * @throws NotFound
+     */
     public function route($route)
     {
         if (!$match = $this->match($route)) {
-            return false;
+            throw new NotFound("Unknown route $route", 0, 1, __FILE__, __LINE__);;
         }
 
         return call_user_func($match->getHandler(), $match);
@@ -69,11 +108,15 @@ class Container implements \ArrayAccess
     /**
      * @param $route
      * @return Request|bool
+     * @throws \ErrorException
      */
     public function match($route)
     {
         $routePrepared = $this->prepareRoute($route);
         $searchExpression = $this->buildGroupRegex();
+        if (!$searchExpression) {
+            throw new \ErrorException("Empty list of pattern", 0, 1, __FILE__, __LINE__);
+        }
         if (!preg_match($searchExpression, $routePrepared, $params)) {
             return false;
         }
@@ -91,26 +134,39 @@ class Container implements \ArrayAccess
         return new Request($pattern, $route, $handler, $params);
     }
 
+    /**
+     * Adds a route to additional suffix, in which is possible to find the matching pattern
+     * @param $route string
+     * @return string Result
+     */
     protected function prepareRoute($route)
     {
         return $route . str_pad('', count($this->patterns), $this->identityChar);
     }
 
+    /**
+     * It collects regular expressions into one expression
+     * @return string
+     */
     protected function buildGroupRegex()
     {
-        if (!$this->preparedSearchRegex) {
-            $result = '';
-            $patterns = array_keys($this->patterns);
-            foreach ($patterns as $key => $pattern) {
-                $result .= $result ? '|' : '';
-                $key++;
-                $result .= '^' . $this->toRegexp($pattern) . "({$this->identityChar}{{$key}}){$this->identityChar}*$";
-            }
-            $this->preparedSearchRegex = $this->regexpSeparator . '(?|' . $result . ')' . $this->regexpSeparator;
+        $result = '';
+        $patterns = array_keys($this->patterns);
+        foreach ($patterns as $key => $pattern) {
+            $result .= $result ? '|' : '';
+            $key++;
+            $result .= '^' . $this->toRegexp($pattern) . "({$this->identityChar}{{$key}}){$this->identityChar}*$";
         }
-        return $this->preparedSearchRegex;
+        return $this->regexpSeparator . '(?|' . $result . ')' . $this->regexpSeparator;
     }
 
+    /**
+     * Convert pattern to regular expression
+     * @param $pattern string The template may contain special
+     *                        tags to retrieve parameters from the route.
+     *                        Tags should be in the format {name: [expresson | shortcut]}
+     * @return mixed
+     */
     public function toRegexp($pattern)
     {
         $exprList = [];
@@ -137,54 +193,34 @@ class Container implements \ArrayAccess
         return $pattern;
     }
 
-    protected function extractParamNames($pattern, array $params)
+    /**
+     * Union values and parameter names
+     * @param $pattern string Source pattern
+     * @param array $values The known value, the number must match the
+     *                      number of tags in the request
+     * @return array
+     */
+    protected function extractParamNames($pattern, array $values)
     {
-        if ($params && preg_match_all(self::REGEX_EXTRACT_PARAMS, $pattern, $matches)) {
-            $params = array_combine($matches[1], $params);
+        if ($values && preg_match_all(self::REGEX_EXTRACT_PARAMS, $pattern, $matches)) {
+            $values = array_combine($matches[1], $values);
         }
-        return $params;
+        return $values;
     }
 
-    /**
-     * Whether a offset exists
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
-     * @since 5.0.0
-     */
+    /** @inheritdoc */
     public function offsetExists($offset)
     {
         return isset($this->patterns[$offset]);
     }
 
-    /**
-     * Offset to retrieve
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     * @param mixed $offset <p>
-     * The offset to retrieve.
-     * </p>
-     * @return mixed Can return all value types.
-     * @since 5.0.0
-     */
+    /** @inheritdoc */
     public function offsetGet($offset)
     {
         return $this->patterns[$offset];
     }
 
-    /**
-     * Offset to unset
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
-     * @return void
-     * @since 5.0.0
-     */
+    /** @inheritdoc */
     public function offsetUnset($offset)
     {
         unset($this->patterns[$offset]);

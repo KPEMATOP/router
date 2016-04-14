@@ -2,13 +2,27 @@
   "name": "axisy/router",
   "description": "Fast php Router",
   "minimum-stability": "dev",
-  "license": "package",
+  "keywords": [
+    "fast",
+    "router",
+    "small"
+  ],
+  "version": "1.0.0-alpha",
   "authors": [
     {
       "name": "Sultanov Albert",
-      "email": "contact.bert.sultanov@gmail.com"
+      "email": "contact.bert.sultanov@gmail.com",
+      "homepage": "https://github.com/KPEMATOP",
+      "role": "Developer"
     }
   ],
+  "support": {
+    "email": "bert.sultanov.contact@gmail.com"
+  },
+  "require": {
+    "php": "^5.5|^7.0",
+    "psr/cache": "~1.0"
+  },
   "require-dev": {
     "codeception/codeception": "*"
   },
