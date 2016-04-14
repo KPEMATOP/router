@@ -1,7 +1,7 @@
 # Fast PHP router
 
 Small package allowing to organize quickly routing.
-If you are going to use for routing of HTTP requests, it will be necessary to expand the package and add the ability to process the HTTP request types. Directions arranged on a similar principle as described in https://nikic.github.io/2014/02/18/Fast-request-routing-using-regular-expressions.html, many thanks to the author of the blog =)
+If you are going to use for routing of HTTP requests, it will be necessary to expand the package and add the ability to process the HTTP request types. Routing arranged on a similar principle as described in https://nikic.github.io/2014/02/18/Fast-request-routing-using-regular-expressions.html, many thanks to the author of the blog =)
 ## Installing
 Via composer `composer require axisy/router`
 ## Basic usage
