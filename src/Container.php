@@ -68,7 +68,7 @@ class Container implements \ArrayAccess
 
     /**
      * @param $route
-     * @return Match|bool
+     * @return Request|bool
      */
     public function match($route)
     {
@@ -88,7 +88,7 @@ class Container implements \ArrayAccess
         unset($patterns, $index, $regex, $searchExpression, $routePrepared);
         $handler = $this->patterns[$pattern];
         $params = $this->extractParamNames($pattern, $params);
-        return new Match($pattern, $route, $handler, $params);
+        return new Request($pattern, $route, $handler, $params);
     }
 
     protected function prepareRoute($route)

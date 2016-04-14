@@ -9,7 +9,7 @@
 namespace axisy\router;
 
 
-class Match
+class Request
 {
     private $route;
     private $params = [];

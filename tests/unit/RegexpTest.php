@@ -43,7 +43,7 @@ class RegexpTest extends \Codeception\Test\Unit
         }
         foreach ($this->testParams as $data) {
             $result = $router->match($data['route']);
-            $this->tester->assertTrue($result instanceof router\Match);
+            $this->tester->assertTrue($result instanceof router\Request);
             $this->tester->assertEquals($result->getParams(), $data['params']);
         }
     }
