@@ -1,4 +1,4 @@
-# Fast PHP router
+# Small PHP router
 
 
 Small package allowing to organize quickly routing.
