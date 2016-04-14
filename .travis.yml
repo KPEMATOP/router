@@ -11,4 +11,5 @@ cache:
 before_script:
     - "composer install"
 script:
-    - "codecept run unit"
+    - "pwd"
+    - "php ./bin/codecept run unit"
