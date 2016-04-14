@@ -1,0 +1,24 @@
+{
+  "name": "axisy/router",
+  "description": "Fast php Router",
+  "minimum-stability": "dev",
+  "license": "package",
+  "authors": [
+    {
+      "name": "Sultanov Albert",
+      "email": "contact.bert.sultanov@gmail.com"
+    }
+  ],
+  "require-dev": {
+    "codeception/codeception": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "axisy\\router\\": "src/"
+    }
+  },
+  "config": {
+    "bin-dir": "./bin",
+    "process-timeout": 1800
+  }
+}
