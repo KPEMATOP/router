@@ -10,4 +10,4 @@ cache:
 before_script:
     - "composer install"
 script:
-    - "~/.composer/vendor/bin/codecept run unit"
+    - "php codecept run unit"
