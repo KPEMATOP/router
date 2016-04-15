@@ -49,6 +49,5 @@ class CacheTest extends \Codeception\Test\Unit
 
     protected function _after()
     {
-        \AspectMock\Test::clean();
     }
 }
