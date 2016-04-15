@@ -7,7 +7,7 @@ cache:
       - vendor
       - $HOME/.composer/cache
 
-before_script:
-    - "composer install"
+install:
+    - composer install --prefer-dist
 script:
-    - "php ./vendor/bin/codecept run unit"
+    - php codecept run
