@@ -1,4 +1,5 @@
 # Small PHP router
+[![Build Status](https://travis-ci.org/axisy/router.svg?branch=master)](https://travis-ci.org/axisy/router)
 
 
 Small package allowing to organize quickly routing.
