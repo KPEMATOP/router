@@ -13,7 +13,7 @@ Via composer `composer require axisy/router`
 use \axisy\router as router;
 
 $router = new router\Container([
-    'migrate.{command:\w+}' => function(router\Match $match){
+    'migrate.{command:\w+}' => function(router\Request $match){
         //matches pattern
         $pattern = $match->getPattern();
         //processed route
@@ -23,7 +23,7 @@ $router = new router\Container([
     }
 ])
 //register new route handler
-$router['user/{id:\d}'] = function(route\Match $match){}
+$router['user/{id:\d}'] = function(route\Request $match){}
 
 //Initializing routing
 $router->route('route')
